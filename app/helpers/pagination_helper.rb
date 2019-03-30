@@ -29,8 +29,10 @@ module PaginationHelper
     window = 4
 
     if records.current_page >= 2
+      html << "<li class='arrow'>" + link_to(content_tag(:i, nil, class: "fas fa-chevron-double-left"), nav_params_for(1), rel: "first", id: "paginator-first") + "</li>"
       html << "<li class='arrow'>" + link_to(content_tag(:i, nil, class: "fas fa-chevron-left"), nav_params_for(records.current_page - 1), rel: "prev", id: "paginator-prev", "data-shortcut": "a left") + "</li>"
     else
+      html << "<li class='arrow'><span>" + content_tag(:i, nil, class: "fas fa-chevron-double-left") + "</span></li>"
       html << "<li class='arrow'><span>" + content_tag(:i, nil, class: "fas fa-chevron-left") + "</span></li>"
     end
 
@@ -70,8 +72,10 @@ module PaginationHelper
 
     if records.current_page < records.total_pages && records.size > 0
       html << "<li class='arrow'>" + link_to(content_tag(:i, nil, class: "fas fa-chevron-right"), nav_params_for(records.current_page + 1), rel: "next", id: "paginator-next", "data-shortcut": "d right") + "</li>"
+      html << "<li class='arrow'>" + link_to(content_tag(:i, nil, class: "fas fa-chevron-double-right"), nav_params_for(records.total_pages), rel: "last", id: "paginator-last") + "</li>"
     else
       html << "<li class='arrow'><span>" + content_tag(:i, nil, class: "fas fa-chevron-right") + "</span></li>"
+      html << "<li class='arrow'><span>" + content_tag(:i, nil, class: "fas fa-chevron-double-right") + "</span></li>"
     end
 
     html << "</menu></div>"
