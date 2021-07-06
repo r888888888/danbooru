@@ -11,7 +11,15 @@ class PostNavbarComponent < ApplicationComponent
   end
 
   def render?
-    has_search_navbar? || pools.any? || favgroups.any?
+    has_search_navbar? || pools.any? || favgroups.any? || parent_relationships.any?
+  end
+
+  def parent_relationships
+    include_deleted = post.is_deleted? || (post.parent_id.present? && post.parent.is_deleted?) || CurrentUser.user.show_deleted_children?
+    relationship_groups = []
+    relationship_groups.push((include_deleted ? post.parent.children : post.parent.children.undeleted).to_a.unshift(post.parent)) if post.parent.present?
+    relationship_groups.push((include_deleted ? post.children : post.children.undeleted).to_a.unshift(post)) if post.has_visible_children?
+    @parent_relationships ||= relationship_groups
   end
 
   def pools
@@ -29,7 +37,7 @@ class PostNavbarComponent < ApplicationComponent
   end
 
   def has_search_navbar?
-    !query.has_metatag?(:order, :ordfav, :ordpool) && pool_id.blank? && favgroup_id.blank?
+    !query.has_metatag?(:order, :ordfav, :ordpool) && pool_id.blank? && favgroup_id.blank? && parent_id.blank?
   end
 
   def pool_id
@@ -38,6 +46,10 @@ class PostNavbarComponent < ApplicationComponent
 
   def favgroup_id
     @favgroup_id ||= query.find_metatag(:favgroup, :ordfavgroup)&.to_i
+  end
+
+  def parent_id
+    @parent_id ||= query.find_metatag(:parent)&.to_i
   end
 
   def query

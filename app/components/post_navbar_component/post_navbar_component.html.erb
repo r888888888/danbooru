@@ -66,4 +66,35 @@
       </span>
     <% end %>
   <% end %>
+
+  <% parent_relationships.each do |parent_relationship| %>
+    <% selected = parent_id == parent_relationship.first.id %>
+    <% parent_post_id = parent_relationship.first.id %>
+    <% last_post_id = parent_relationship.last.id %>
+    <% this_index = parent_relationship.find_index { |relationship_element| relationship_element[:id] == post.id } || 0 %>
+    <% previous_post_id = (post.id != parent_relationship.first.id) ? parent_relationship[this_index - 1].id : nil %>
+    <% next_post_id = (post.id != parent_relationship.last.id) ? parent_relationship[this_index + 1].id : nil %>
+
+    <%= tag.li class: "parent-navbar", "data-selected": selected do %>
+      <span class="first">
+        <%= link_to_unless parent_post_id == post.id, "«", post_path(parent_post_id, q: "parent:#{parent_post_id}"), rel: "nofollow" %>
+      </span>
+
+      <span class="prev">
+        <%= link_to_if previous_post_id, "‹ prev", post_path(previous_post_id.to_i, q: "parent:#{parent_post_id}"), rel: ["nofollow", ("prev" if selected)], "data-shortcut": ("a" if selected) %>
+      </span>
+
+      <span class="parent-name">
+        <%= link_to "Parent: #{parent_post_id}", parent_relationship.first %>
+      </span>
+
+      <span class="next">
+        <%= link_to_if next_post_id, "next ›", post_path(next_post_id.to_i, q: "parent:#{parent_post_id}"), rel: ["nofollow", ("next" if selected)], "data-shortcut": ("d" if selected) %>
+      </span>
+
+      <span class="last">
+        <%= link_to_unless last_post_id == post.id, "»", post_path(last_post_id, q: "parent:#{parent_post_id}"), rel: "nofollow" %>
+      </span>
+    <% end %>
+  <% end %>
 </ul>
