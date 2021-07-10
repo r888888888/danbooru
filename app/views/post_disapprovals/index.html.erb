@@ -29,7 +29,7 @@
       <% t.column "Created" do |post_disapproval| %>
         <% if policy(post_disapproval).can_view_creator? %>
           <%= link_to_user post_disapproval.user %>
-          <%= link_to "»", post_disapprovals_path(search: params[:search].merge(creator_name: post_disapproval.user&.name)) %>
+          <%= link_to "»", post_disapprovals_path(search: params[:search].merge(user_name: post_disapproval.user&.name)) %>
         <% end %>
 
         <p>
