@@ -427,7 +427,7 @@ class Note {
         this.resized = true;
       }
 
-      this.$note_body.show();
+      this.$note_body.css('display', 'flex');
       this.initialize();
     }
 
@@ -513,6 +513,9 @@ class Note {
       text = text.replace(/<tn>/g, '<p class="tn">');
       text = text.replace(/<\/tn>/g, '</p>');
       text = text.replace(/\n/g, '<br>');
+      if (!text.match(/^\s*<.*>.*$/g) || text.match(/^\s*<.*>.*<\/.*>\s*[^\s]+/g)) {
+          text = "<span>" + text + "</span>";
+      }
 
       if (this.note.embed) {
         this.note.box.$inner_border.html(text);
@@ -530,7 +533,7 @@ class Note {
 
       this.display_text(response.body);
       this.initialize();
-      this.$note_body.show();
+      this.$note_body.css('display', 'flex');
     }
 
     on_mouseover(e) {
