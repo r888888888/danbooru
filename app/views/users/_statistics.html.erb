@@ -35,6 +35,16 @@
         </tr>
       <% end %>
 
+      <% if policy(UserEvent).show? %>
+        <tr>
+          <th>User Events</th>
+          <td>
+            <%= link_to "By Name", user_events_path(search: { user_name: user.name }) %>,
+            <%= link_to "By IP", user_events_path(search: { user_session: { ip_addr: user.last_ip_addr }}) %>
+          <td>
+        </tr>
+      <% end %>
+
       <% if policy(user.email_address).show? %>
         <tr class="user-email-address">
           <th>Email Address</th>
